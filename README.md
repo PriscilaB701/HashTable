@@ -5,5 +5,7 @@ O objetivo desta atividade é implementar duas tabelas hash, utilizando duas fun
 diferentes, e compará-las quanto à eficiência em termos de:
 
 • Número de colisões. (Tratamento de colisões com Encadeamento exterior)
+
 • Tempo de inserção e busca.
+
 • Distribuição das chaves na tabela.
