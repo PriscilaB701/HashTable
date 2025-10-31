@@ -1,7 +1,9 @@
 package models;
 
 public abstract class HashTable {
-    protected int capacity = 32;
+    // capacidade inicial menor, e limite máximo de 32
+    protected int capacity = 8;
+    protected final int MAX_CAPACITY = 32;
     protected String[][] table;
     protected int size = 0;
     protected final double loadFactor = 0.75;
@@ -14,11 +16,12 @@ public abstract class HashTable {
 
     public void insert(String key) {
         int index = hash(key);
+
         if (table[index] == null) {
             table[index] = new String[1];
             table[index][0] = key;
         } else {
-
+            // colisão: adiciona na "lista encadeada"
             String[] old = table[index];
             String[] newChain = new String[old.length + 1];
             for (int i = 0; i < old.length; i++) {
@@ -29,7 +32,9 @@ public abstract class HashTable {
         }
 
         size++;
-        if (getLoadFactor() > loadFactor){
+
+        // faz rehash se o fator de carga passar do limite e ainda não atingiu o máximo
+        if (getLoadFactor() > loadFactor && capacity < MAX_CAPACITY) {
             rehash();
         }
     }
@@ -47,15 +52,21 @@ public abstract class HashTable {
         return (double) size / capacity;
     }
 
-
     private void rehash() {
-        System.out.println("\n>>> Redimensionando tabela de " + capacity + " para " + (capacity * 2));
-        String[][] oldTable = table;
+        if (capacity >= MAX_CAPACITY) {
+            System.out.println("⚠️ Capacidade máxima atingida (" + capacity + "). Rehash ignorado.");
+            return;
+        }
 
-        capacity *= 2;
+        int newCapacity = Math.min(capacity * 2, MAX_CAPACITY);
+        System.out.println("\n>>> Redimensionando tabela de " + capacity + " para " + newCapacity);
+
+        String[][] oldTable = table;
+        capacity = newCapacity;
         table = new String[capacity][];
         size = 0;
 
+        // reinserindo os elementos antigos
         for (String[] chain : oldTable) {
             if (chain != null) {
                 for (String key : chain) {
@@ -76,6 +87,7 @@ public abstract class HashTable {
     }
 
     public void printDistribution() {
+        System.out.println("\nDistribuição das chaves (capacidade atual: " + capacity + "):");
         for (int i = 0; i < capacity; i++) {
             int count = (table[i] == null) ? 0 : table[i].length;
             System.out.println("Posição " + i + ": " + count + " chave(s)");
