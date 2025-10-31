@@ -3,6 +3,8 @@ package models;
 public abstract class HashTable {
     protected int capacity = 32;
     protected String[][] table;
+    protected int size = 0;
+    protected final double loadFactor = 0.75;
 
     public HashTable() {
         table = new String[capacity][];
@@ -25,6 +27,11 @@ public abstract class HashTable {
             newChain[old.length] = key;
             table[index] = newChain;
         }
+
+        size++;
+        if (getLoadFactor() > loadFactor){
+            rehash();
+        }
     }
 
     public boolean search(String key) {
@@ -34,6 +41,28 @@ public abstract class HashTable {
             if (s.equals(key)) return true;
         }
         return false;
+    }
+
+    public double getLoadFactor() {
+        return (double) size / capacity;
+    }
+
+
+    private void rehash() {
+        System.out.println("\n>>> Redimensionando tabela de " + capacity + " para " + (capacity * 2));
+        String[][] oldTable = table;
+
+        capacity *= 2;
+        table = new String[capacity][];
+        size = 0;
+
+        for (String[] chain : oldTable) {
+            if (chain != null) {
+                for (String key : chain) {
+                    insert(key);
+                }
+            }
+        }
     }
 
     public int countCollisions() {

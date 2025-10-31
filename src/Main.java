@@ -29,17 +29,17 @@ public class Main {
 
         System.out.println("\n================== RELATÓRIO ==================\n");
 
-        System.out.println("Tabela A - Função Hash Simples:");
+        System.out.println("\n==================Tabela A - Função Hash Simples==================:");
         System.out.println("→ Colisões: " + tableA.countCollisions());
         System.out.println("→ Tempo de inserção: " + (endA - startA) / 1_000_000.0 + " ms");
         tableA.printDistribution();
 
-        System.out.println("\nTabela B - Função Hash Polinomial:");
+        System.out.println("\n==================Tabela B - Função Hash Polinomial==================:");
         System.out.println("→ Colisões: " + tableB.countCollisions());
         System.out.println("→ Tempo de inserção: " + (endB - startB) / 1_000_000.0 + " ms");
         tableB.printDistribution();
 
-        // Teste de busca
+        //teste de busca
         System.out.println("\n=== Testando buscas ===");
         String[] testNames = {"Mary", "Sophia", "Olivia", "Nonexistent"};
         for (String name : testNames) {
